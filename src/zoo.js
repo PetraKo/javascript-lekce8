@@ -44,27 +44,77 @@ export default class Zoo {
             //uvnitř arrow function se nemění context .this 
             //this je pořád stejné jako jinde => this = třída
             tlacitko.addEventListener("click", (e) => {
-                this.animalClick(e);
+                this.animalClick(e.target);
             });
         });
 
     }
 
-    animalClick(e) {
+    animalClick(element) {
+        let prvek = element.closest(".zvire");
+        let id = prvek.dataset.id;
         //e - prvek na který se kliklo, nese nějaké data, které má nějaké id
-        let id = e.target.dataset.id;
+        //let id = e.target.dataset.id;
         this.getAnimal(id);
+        //console.log(id);
     }
 
     getAnimal(id) {
         fetch(API_BASE + "zvirata/" + id)
-        .then(response => response.json())
-        .then(data => {
-            this.showAnimal(data);
-        });
+            .then(response => response.json())
+            .then(data => {
+                this.showAnimal(data);
+            });
     }
 
     showAnimal(data) {
-        console.log(data);
+        document.getElementById("nazev").textContent = data.nazev;
+        document.getElementById("latinsky").textContent = data.nazevLatinsky;
+        document.getElementById("popis").textContent = data.popis;
+        document.getElementById("domovina").textContent = data.domovina;
+        document.getElementById("biotop").textContent = data.biotop;
+        document.getElementById("potrava").textContent = data.potrava;
+        document.getElementById("velikost").textContent = data.velikost;
+        document.querySelector(".detail__foto").src = "images/" + data.foto;
+        document.querySelector(".detail__foto").alt = "images/" + data.nazev;
+
+    //    let pole = [];
+
+    //     data.zoo.forEach(zoo => {
+    //         pole.push(fetch(API_BASE + "zoo/" + zoo));
+    //     });
+
+    //     Promise.all(pole)
+    //         .then(responses => {
+    //             let poleJson = [];
+
+    //             responses.forEach(response => {
+    //                 poleJson.push(response.json());
+    //             })
+
+    //             Promise.all(poleJson)
+    //                 .then(zoos => {
+    //                     console.table(zoos);
+    //                 })
+    //         });
+    // }
+
+    //načte z API konkrétní zoo podle předaného ID
+    async getZoo(id) {
+
+        let response = await fetch(API_BASE + "zoo/" + id);
+        let data = await response.json();
+
+        return data;
+        // fetch(API_BASE + "zoo/" + id)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         this.showZoo(data);
+        //     });
     }
+
+    showZoo(data) {
+
+    }
+
 }
